@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 import daisyui from "daisyui";
 export default {
-	content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
+	content: ["./index.html", "./src/**/*.{svelte,js,ts,jsx,tsx}"],
 	theme: {
 		extend: {},
 	},
@@ -12,18 +12,23 @@ export default {
 			"dark",
 			"emerald",
 			"corporate",
-			"synthwave",
+			"cyberpunk",
+			"valentine",
 			"halloween",
 			"forest",
+			"lofi",
+			"pastel",
+			"fantasy",
+			"wireframe",
 			"black",
-			"luxury",
 			"dracula",
 			"cmyk",
 			"autumn",
 			"business",
-			"night",
 			"coffee",
 			"winter",
+			"nord",
+			"sunset",
 		],
 	},
 };
