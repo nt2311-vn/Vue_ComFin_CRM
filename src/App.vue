@@ -1,28 +1,48 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { account, ID } from "./lib/appwrite";
+
 const loggedInUser = ref(null);
 const email = ref("");
 const name = ref("");
 const password = ref("");
-const isDarkMode = ref(false);
-const currentTab = ref("login");
+const currentTab = ref("login"); // To track the active tab
+const currentTheme = ref("light"); // To track the current theme
 
-const toggleDarkMode = () => {
-  isDarkMode.value = !isDarkMode.value;
-  if (isDarkMode.value) {
-    document.documentElement.classList.add("dark");
-  } else {
-    document.documentElement.classList.remove("dark");
-  }
+const themes = [
+  "light",
+  "dark",
+  "cupcake",
+  "emerald",
+  "corporate",
+  "synthwave",
+  "valentine",
+  "halloween",
+  "forest",
+  "black",
+  "dracula",
+  "cmyk",
+  "business",
+  "night",
+  "coffee",
+  "winter",
+];
+
+const setTheme = (theme: string) => {
+  currentTheme.value = theme;
+  document.documentElement.setAttribute("data-theme", theme);
 };
+
+watch(currentTheme, (newTheme) => {
+  setTheme(newTheme);
+});
 
 const login = async (email: string, password: string) => {
   try {
     await account.createEmailPasswordSession(email, password);
     loggedInUser.value = await account.get();
-  } catch (err) {
-    console.error("Login error", err);
+  } catch (error) {
+    console.error("Login error:", error);
   }
 };
 
@@ -30,30 +50,42 @@ const register = async () => {
   try {
     await account.create(ID.unique(), email.value, password.value, name.value);
     login(email.value, password.value);
-  } catch (err) {
-    console.error("Register error", err);
+  } catch (error) {
+    console.error("Registration error:", error);
   }
 };
 
 const logout = async () => {
-  await account.deleteSession("current");
-  loggedInUser.value = null;
+  try {
+    await account.deleteSession("current");
+    loggedInUser.value = null;
+  } catch (error) {
+    console.error("Logout error:", error);
+  }
 };
 </script>
 <template>
   <div
-    :class="{ dark: isDarkMode }"
+    :class="{ dark: currentTheme === 'dark' }"
     class="min-h-screen flex flex-col items-center bg-base-200 p-4"
   >
     <!-- Navbar -->
     <div class="navbar bg-base-100 shadow-lg w-full mb-8">
       <div class="flex-1 px-2 mx-2">
-        <span class="text-lg font-bold">My App</span>
+        <span class="text-lg font-bold">Finance CRM</span>
       </div>
       <div class="flex-none">
-        <button @click="toggleDarkMode" class="btn btn-outline mr-2">
-          Toggle Dark Mode
-        </button>
+        <div class="dropdown dropdown-end mr-2">
+          <label tabindex="0" class="btn btn-outline">Select Theme</label>
+          <ul
+            tabindex="0"
+            class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 max-h-96 overflow-y-auto"
+          >
+            <li v-for="theme in themes" :key="theme">
+              <a @click="setTheme(theme)">{{ theme }}</a>
+            </li>
+          </ul>
+        </div>
         <button v-if="loggedInUser" @click="logout" class="btn btn-accent">
           Logout
         </button>
