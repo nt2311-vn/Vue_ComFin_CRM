@@ -69,7 +69,6 @@ const logout = async () => {
     :class="{ dark: currentTheme === 'dark' }"
     class="min-h-screen flex flex-col items-center bg-base-200 p-4"
   >
-    <!-- Navbar -->
     <div class="navbar bg-base-100 shadow-lg w-full mb-8">
       <div class="flex-1 px-2 mx-2">
         <span class="text-lg font-bold">Finance CRM</span>
@@ -92,7 +91,6 @@ const logout = async () => {
       </div>
     </div>
 
-    <!-- Tabs for login and register -->
     <div class="tabs mb-4">
       <a
         @click="currentTab = 'login'"
@@ -131,7 +129,6 @@ const logout = async () => {
             class="input input-bordered w-full"
           />
 
-          <!-- Conditional rendering based on the active tab -->
           <div v-if="currentTab === 'login'">
             <button
               type="button"
