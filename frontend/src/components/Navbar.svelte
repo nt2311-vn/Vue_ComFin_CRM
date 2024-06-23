@@ -1,6 +1,9 @@
 <script>
-	import { onMount } from 'svelte';
-	let currentTheme = 'light';
+	import { writable } from 'svelte/store';
+
+	let currentTheme = writable('light');
+	let loggedInUser = writable(null);
+
 	const themes = [
 		'light',
 		'dark',
@@ -22,36 +25,32 @@
 		'nord',
 		'sunset'
 	];
-
-	const chooseTheme = (theme) => {
-		currentTheme = theme;
+	const setTheme = (theme) => {
+		currentTheme.set(theme);
 		document.documentElement.setAttribute('data-theme', theme);
 	};
-
-	onMount(() => {
-		document.documentElement.setAttribute('data-theme', currentTheme);
-	});
 </script>
 
-<nav class="navbar bg-primary/50 backdrop-blur-md text-primary-content">
-	<div class="navbar-start">
-		<a href="/" class="btn btn-ghost normal-case text-xl">App Logo</a>
+<nav class="navbar bg-base-100 shadow-lg w-full mb-8">
+	<div class="flex-1 px-2 mx-2">
+		<span class="text-lg font-bold">Finance CRM</span>
 	</div>
-	<div class="navbar-end flex items-center space-x-4">
-		<div class="dropdown">
-			<button tabindex="0" class="btn btn-ghost btn-circle dropdown-toggle">
-				<span>Select Theme: {currentTheme}</span>
-			</button>
-			<ul
-				tabindex="0"
-				class="menu menu-compact dropdown-content mt-3 p-2 shadow-lg bg-base-100/80 backdrop-blur-md rounded-box w-52"
+	<div class="flex-none">
+		<div class="dropdown dropdown-end mr-2">
+			<label for="themeSelector" class="text-sm text-gray-600">Select Theme:</label>
+			<select
+				id="themeSelector"
+				class="btn btn-outline p-2 shadow bg-base-100 rounded-box w-52 max-h-96 overflow-y-auto"
+				on:change={(event) => setTheme(event.target.value)}
 			>
-				<li class="menu-title"><span>Themes</span></li>
+				<option disabled selected hidden>Select a theme</option>
 				{#each themes as theme}
-					<li><a href="#" role="button" on:click={() => chooseTheme(theme)}>{theme}</a></li>
+					<option value={theme}>{theme}</option>
 				{/each}
-			</ul>
+			</select>
 		</div>
-		<button class="btn btn-outline btn-primary ml-2" on:click={() => {}}>Logout</button>
+		{#if $loggedInUser}
+			<button on:click={() => {}} class="btn btn-accent">Logout</button>
+		{/if}
 	</div>
 </nav>
